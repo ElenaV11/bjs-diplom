@@ -45,7 +45,7 @@ moneyManager.addMoneyCallback = (data) => {
 			ProfileWidget.showProfile(response.data);
             moneyManager.setMessage(response.success, "Баланс пополнен " + data.amount + " " + data.currency);
 		} else {
-			moneyManager.setMessage(response.success, "Ошибка пополнения баланса. Пожалуйста, проверьте корректность указанной суммы и валюты");
+			moneyManager.setMessage(response.success, "Ошибка пополнения баланса. Пожалуйста, проверьте корректность указанных данных (сумма, валюта).");
 		}
 	});
 };
@@ -56,7 +56,7 @@ moneyManager.conversionMoneyCallback = (data) => {
 			ProfileWidget.showProfile(response.data);
 			moneyManager.setMessage(response.success, "Конвертация успешно выполнена!");
 		} else {
-			moneyManager.setMessage(response.success, "Ошибка конвертации валюты. Пожалуйста, проверьте корректность указанной суммы и выбор валют");
+			moneyManager.setMessage(response.success, "Ошибка конвертации валюты. Пожалуйста, проверьте корректность указанных данных (сумма, валюта).");
 		}
 	});
 };
@@ -67,7 +67,7 @@ moneyManager.conversionMoneyCallback = (data) => {
             ProfileWidget.showProfile(response.data);
             moneyManager.setMessage(response.success, "Перевод успешно выполнен!");
         } else {
-            moneyManager.setMessage(response.success, "Ошибка перевода валюты. Пожалуйста, проверьте корректность указанной суммы и валюты");
+            moneyManager.setMessage(response.success, "Ошибка перевода валюты. Пожалуйста, проверьте корректность указанных данных (сумма, валюта, пользователь).");
         }
     });
  }
@@ -77,11 +77,11 @@ moneyManager.conversionMoneyCallback = (data) => {
 
 const favoritesWidget = new FavoritesWidget;
     // начальный список избранного
-ApiConnector.getFavorites(data, (response) => {
+ApiConnector.getFavorites((response) => {
     if (response.success === true) {
         favoritesWidget.clearTable();
         favoritesWidget.fillTable(response.data);
-        favoritesWidget.updateUsersList(response.data);
+        moneyManager.updateUsersList(response.data);
     }
 });
      // добавление пользователя в список избранных   
@@ -90,12 +90,26 @@ ApiConnector.getFavorites(data, (response) => {
         if (response.success === true) {
             favoritesWidget.clearTable();
             favoritesWidget.fillTable(response.data);
-            favoritesWidget.updateUsersList(response.data);
-            favoritesWidget.setMessage(response.success, "Пользователь добавлен в адресную книгу!");
+            moneyManager.updateUsersList(response.data);
+            favoritesWidget.setMessage(response.success, "Пользователь добавлен в список избранных.");
         } else {
-            favoritesWidget.setMessage(response.success, "Ошибка добавления в адресную книгу! Проверьте корректность введенного ID и имени пользователя");
+            favoritesWidget.setMessage(response.success, "Ошибка добавления в список избранных! Проверьте корректность ID и имени пользователя.");
         }
     });
  }
+     // удаление пользователя из избранного
+favoritesWidget.removeUserCallback = (data) => {
+    ApiConnector.removeUserFromFavorites(data, (response) => {
+        if (response.success === true) {
+            favoritesWidget.clearTable();
+            favoritesWidget.fillTable(response.data);
+            moneyManager.updateUsersList(response.data);
+            favoritesWidget.setMessage(response.success, "Пользователь удален из списка избранных.");
+        } else {
+            favoritesWidget.setMessage(response.success, "Ошибка удаления пользователя из списка избранных!");
+        }
+    });
+}     
+
 
    
