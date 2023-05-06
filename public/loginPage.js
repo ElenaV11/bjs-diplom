@@ -1,5 +1,5 @@
 const userForm = new UserForm();
-
+    // авторизация
 userForm.loginFormCallback = (data) => {
 	ApiConnector.login(data, (response) => {
 		if (response.success) {
@@ -9,7 +9,7 @@ userForm.loginFormCallback = (data) => {
 		}
 	});
 };
-
+    // регистрация
 userForm.registerFormCallback = (data) => {
 	ApiConnector.register(data, (response) => {
 		if (response.success) {
